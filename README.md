@@ -31,3 +31,4 @@ open index.html
 ├── style.css    # Ocean Glassmorphism styles & animations
 └── script.js    # Game logic, audio, and effects
 
+<img width="1902" height="845" alt="image" src="https://github.com/user-attachments/assets/9f0c5494-3aa2-451a-921e-93a680725a63" />

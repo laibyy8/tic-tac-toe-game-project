@@ -1,0 +1,376 @@
+/* ── CSS Variables ── */
+:root {
+  --ocean-deep:   #020d1f;
+  --ocean-mid:    #053460;
+  --ocean-light:  #0a5f8c;
+  --cyan:         #00d4ff;
+  --cyan-dim:     #00a8c8;
+  --teal:         #00ffcc;
+  --glass-bg:     rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(0, 212, 255, 0.25);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  --win-glow:     0 0 20px var(--teal), 0 0 40px var(--teal);
+  --text-main:    #e0f7ff;
+  --text-muted:   rgba(224, 247, 255, 0.55);
+}
+
+/* ── Reset ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Body ── */
+body {
+  min-height: 100vh;
+  background: var(--ocean-deep);
+  font-family: 'Nunito', sans-serif;
+  color: var(--text-main);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Animated Ocean Background ── */
+.ocean-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(0, 84, 160, 0.55) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(0, 180, 200, 0.35) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(2, 20, 60, 1) 0%, var(--ocean-deep) 100%);
+}
+
+/* ── Floating Bubbles (created via JS) ── */
+.bubble {
+  position: fixed;
+  bottom: -80px;
+  border-radius: 50%;
+  background: rgba(0, 212, 255, 0.12);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  animation: rise linear infinite;
+  z-index: 0;
+}
+
+@keyframes rise {
+  to {
+    transform: translateY(-110vh) scale(1.4);
+    opacity: 0;
+  }
+}
+
+/* ── Main Layout ── */
+main {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+  padding: 1rem;
+  width: 100%;
+  max-width: 480px;
+}
+
+/* ── Title ── */
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.6rem, 6vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  background: linear-gradient(135deg, var(--cyan) 30%, var(--teal) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.5));
+  text-align: center;
+}
+
+/* ── Wave Separator ── */
+.wave-sep {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--cyan), var(--teal));
+  border-radius: 3px;
+  margin: -0.3rem 0;
+}
+
+/* ── Turn Indicator ── */
+.turn-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color 0.3s;
+}
+
+.turn-symbol {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  padding: 0.15rem 0.6rem;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+
+.turn-symbol.O {
+  color: var(--cyan);
+  border: 1.5px solid var(--cyan);
+  text-shadow: 0 0 8px var(--cyan);
+}
+
+.turn-symbol.X {
+  color: var(--teal);
+  border: 1.5px solid var(--teal);
+  text-shadow: 0 0 8px var(--teal);
+}
+
+/* ── Score Board ── */
+.scoreboard {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.score-card {
+  flex: 1;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  backdrop-filter: blur(14px);
+  box-shadow: var(--glass-shadow);
+  padding: 0.8rem 0.5rem;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.score-card:hover {
+  transform: translateY(-2px);
+}
+
+.score-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.score-symbol {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin: 0.1rem 0;
+}
+
+.score-card.O .score-symbol { color: var(--cyan); text-shadow: 0 0 8px var(--cyan); }
+.score-card.X .score-symbol { color: var(--teal); text-shadow: 0 0 8px var(--teal); }
+.score-card.draw .score-symbol { color: #aaa; }
+
+.score-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.9rem;
+  font-weight: 800;
+}
+
+.score-card.O .score-num    { color: var(--cyan); }
+.score-card.X .score-num    { color: var(--teal); }
+.score-card.draw .score-num { color: var(--text-muted); }
+
+/* Score bump animation on update */
+@keyframes scoreBump {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.22); }
+  100% { transform: scale(1); }
+}
+
+.score-card.bump {
+  animation: scoreBump 0.35s ease;
+}
+
+/* ── Game Grid ── */
+.game {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.1vmin;
+  width: clamp(240px, 72vmin, 360px);
+}
+
+.box {
+  aspect-ratio: 1;
+  background: var(--glass-bg);
+  border: 1.5px solid var(--glass-border);
+  border-radius: 16px;
+  backdrop-filter: blur(18px);
+  box-shadow: var(--glass-shadow);
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.8rem, 9vmin, 3.2rem);
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
+  color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.box:hover:not(:disabled) {
+  transform: scale(1.06);
+  border-color: rgba(0, 212, 255, 0.55);
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.3), var(--glass-shadow);
+  background: rgba(255, 255, 255, 0.11);
+}
+
+.box:disabled {
+  cursor: default;
+}
+
+/* O and X colors */
+.box.O { color: var(--cyan); text-shadow: 0 0 12px var(--cyan), 0 0 25px rgba(0, 212, 255, 0.4); }
+.box.X { color: var(--teal); text-shadow: 0 0 12px var(--teal), 0 0 25px rgba(0, 255, 204, 0.4); }
+
+/* Pop-in animation when mark is placed */
+@keyframes popIn {
+  0%   { transform: scale(0.3) rotate(-15deg); opacity: 0; }
+  70%  { transform: scale(1.15) rotate(4deg);  opacity: 1; }
+  100% { transform: scale(1) rotate(0deg);     opacity: 1; }
+}
+
+.box.placed {
+  animation: popIn 0.28s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+/* Winning box glow pulse */
+.box.winner-box.O {
+  background: rgba(0, 212, 255, 0.15);
+  border-color: var(--cyan);
+  box-shadow: var(--win-glow), var(--glass-shadow);
+  animation: winPulse 0.9s ease infinite alternate;
+}
+
+.box.winner-box.X {
+  background: rgba(0, 255, 204, 0.12);
+  border-color: var(--teal);
+  box-shadow: 0 0 20px var(--teal), 0 0 40px var(--teal), var(--glass-shadow);
+  animation: winPulse 0.9s ease infinite alternate;
+}
+
+@keyframes winPulse {
+  from { box-shadow: 0 0 10px currentColor, var(--glass-shadow); }
+  to   { box-shadow: 0 0 30px currentColor, 0 0 60px currentColor, var(--glass-shadow); }
+}
+
+/* ── Ripple Effect (created via JS) ── */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  background: rgba(255, 255, 255, 0.15);
+  animation: rippleAnim 0.5s linear;
+  pointer-events: none;
+}
+
+@keyframes rippleAnim {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* ── Result Overlay ── */
+.result-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  background: rgba(2, 13, 31, 0.82);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+
+.result-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.result-icon {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(4rem, 20vmin, 8rem);
+  font-weight: 800;
+  animation: iconFloat 2s ease-in-out infinite;
+}
+
+.result-icon.O    { color: var(--cyan); text-shadow: 0 0 30px var(--cyan), 0 0 60px rgba(0, 212, 255, 0.5); }
+.result-icon.X    { color: var(--teal); text-shadow: 0 0 30px var(--teal), 0 0 60px rgba(0, 255, 204, 0.5); }
+.result-icon.draw { color: #aaa; text-shadow: 0 0 20px rgba(170, 170, 170, 0.5); }
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-12px); }
+}
+
+.result-msg {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.1rem, 4.5vw, 1.8rem);
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-main);
+}
+
+.result-msg span.O { color: var(--cyan); text-shadow: 0 0 8px var(--cyan); }
+.result-msg span.X { color: var(--teal); text-shadow: 0 0 8px var(--teal); }
+
+/* ── Buttons ── */
+.btn {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.65rem 1.8rem;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+
+.btn:hover  { transform: translateY(-2px); }
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--cyan) 0%, var(--teal) 100%);
+  color: var(--ocean-deep);
+  box-shadow: 0 4px 18px rgba(0, 212, 255, 0.35);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 6px 28px rgba(0, 212, 255, 0.55);
+}
+
+.btn-ghost {
+  background: var(--glass-bg);
+  color: var(--text-muted);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+}
+
+.btn-ghost:hover {
+  color: var(--text-main);
+  border-color: var(--cyan);
+}
+
+.btn-row {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}

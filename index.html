@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tic Tac Toe – Ocean</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Ocean background layer -->
+  <div class="ocean-bg"></div>
+
+  <!-- Result overlay (shown after win/draw) -->
+  <div class="result-overlay" id="resultOverlay">
+    <div class="result-icon" id="resultIcon"></div>
+    <div class="result-msg" id="resultMsg"></div>
+    <button class="btn btn-primary" id="newGameBtn">Play Again</button>
+  </div>
+
+  <main>
+    <h1>Tic Tac Toe</h1>
+    <div class="wave-sep"></div>
+
+    <!-- Score board -->
+    <div class="scoreboard">
+      <div class="score-card O" id="scoreO">
+        <div class="score-label">Player</div>
+        <div class="score-symbol">O</div>
+        <div class="score-num" id="scoreONum">0</div>
+      </div>
+      <div class="score-card draw" id="scoreDraw">
+        <div class="score-label">Draws</div>
+        <div class="score-symbol">~</div>
+        <div class="score-num" id="scoreDrawNum">0</div>
+      </div>
+      <div class="score-card X" id="scoreX">
+        <div class="score-label">Player</div>
+        <div class="score-symbol">X</div>
+        <div class="score-num" id="scoreXNum">0</div>
+      </div>
+    </div>
+
+    <!-- Turn indicator -->
+    <div class="turn-bar" id="turnBar">
+      Turn: <span class="turn-symbol O" id="turnSymbol">O</span>
+    </div>
+
+    <!-- Game grid -->
+    <div class="game" id="game">
+      <button class="box" data-i="0"></button>
+      <button class="box" data-i="1"></button>
+      <button class="box" data-i="2"></button>
+      <button class="box" data-i="3"></button>
+      <button class="box" data-i="4"></button>
+      <button class="box" data-i="5"></button>
+      <button class="box" data-i="6"></button>
+      <button class="box" data-i="7"></button>
+      <button class="box" data-i="8"></button>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="resetBtn">↺ Reset Game</button>
+      <button class="btn btn-ghost" id="clearScoreBtn">Clear Scores</button>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
